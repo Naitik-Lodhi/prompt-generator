@@ -7,33 +7,341 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      padding-top: 3rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      margin: 0 auto;
+      max-width: 100%;
+      min-height: calc(100vh - 2rem);
+      display: flex;
+      flex-direction: column;
     }
     textarea {
       white-space: pre-wrap;
       word-break: break-word;
       transition: height 0.3s ease;
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      resize: vertical;
+      min-height: 200px;
+      max-height: 60vh;
+    }
+    textarea:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
     }
     .theme-toggle {
       display: inline-flex;
       align-items: center;
-      padding: 0.75rem 1.5rem;
-      font-size: 1.1rem;
-      border-radius: 50px;
-      border: none;
-      background: linear-gradient(45deg, #6c757d, #343a40);
-      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      border-radius: 25px;
+      border: 2px solid #6c757d;
+      background: transparent;
+      color: var(--bs-body-color);
       cursor: pointer;
       transition: all 0.3s ease-in-out;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      min-width: 80px;
+      justify-content: center;
     }
     .theme-toggle:hover {
-      transform: scale(1.05);
-      background: linear-gradient(45deg, #495057, #212529);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      border-color: #495057;
     }
     .theme-toggle-icon {
-      margin-left: 0.5rem;
-      font-size: 1.3rem;
+      margin-left: 0.3rem;
+      font-size: 1rem;
+    }
+    
+    .btn {
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 1rem;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0d6efd;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .char-counter {
+      font-size: 0.8rem;
+      color: #6c757d;
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+    
+    .input-group {
+      position: relative;
+    }
+    
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+    }
+    
+    .suggestion-item {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid #f8f9fa;
+    }
+    .suggestion-item:hover {
+      background-color: #f8f9fa;
+    }
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+    
+    .alert {
+      border-radius: 10px;
+      border: none;
+    }
+    
+    .form-control {
+      border-radius: 8px;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    .form-control:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 0.75rem;
+      }
+      .container {
+        padding: 1.5rem;
+        margin: 0 auto;
+        min-height: calc(100vh - 1.5rem);
+      }
+      .theme-toggle {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        min-width: 70px;
+      }
+      .theme-toggle-icon {
+        font-size: 0.9rem;
+        margin-left: 0.2rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      .btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+      }
+      .suggestions {
+        max-height: 150px;
+      }
+      textarea {
+        min-height: 180px;
+        max-height: 50vh;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      body {
+        padding: 0.5rem;
+      }
+      .container {
+        padding: 1rem;
+        margin: 0 auto;
+        min-height: calc(100vh - 1rem);
+        border-radius: 10px;
+      }
+      .theme-toggle {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+        min-width: 60px;
+      }
+      .theme-toggle-icon {
+        font-size: 0.8rem;
+        margin-left: 0.15rem;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      .btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        margin-bottom: 0.5rem;
+      }
+      .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .btn-group .btn {
+        width: 100%;
+        margin-left: 0 !important;
+      }
+      .suggestions {
+        max-height: 120px;
+        font-size: 0.9rem;
+      }
+      .suggestion-item {
+        padding: 0.4rem 0.8rem;
+      }
+      textarea {
+        min-height: 160px;
+        max-height: 45vh;
+      }
+    }
+    
+    @media (max-width: 375px) {
+      body {
+        padding: 0.25rem;
+      }
+      .container {
+        padding: 0.75rem;
+        margin: 0 auto;
+        min-height: calc(100vh - 0.5rem);
+      }
+      .theme-toggle {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+        min-width: 55px;
+      }
+      .theme-toggle-icon {
+        font-size: 0.75rem;
+        margin-left: 0.1rem;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      .btn {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.7rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+      .form-label {
+        font-size: 0.9rem;
+      }
+      .suggestions {
+        max-height: 100px;
+        font-size: 0.8rem;
+      }
+      .suggestion-item {
+        padding: 0.3rem 0.6rem;
+      }
+      .char-counter {
+        font-size: 0.7rem;
+      }
+      textarea {
+        min-height: 140px;
+        max-height: 40vh;
+      }
+    }
+    
+    @media (max-width: 320px) {
+      body {
+        padding: 0.125rem;
+      }
+      .container {
+        padding: 0.5rem;
+        margin: 0 auto;
+        min-height: calc(100vh - 0.25rem);
+        border-radius: 8px;
+      }
+      .theme-toggle {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.65rem;
+        min-width: 50px;
+      }
+      .theme-toggle-icon {
+        font-size: 0.7rem;
+        margin-left: 0.08rem;
+      }
+      h1 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+      .btn {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+      }
+      p {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+      }
+      .form-label {
+        font-size: 0.8rem;
+      }
+      .suggestions {
+        max-height: 80px;
+        font-size: 0.75rem;
+      }
+      .suggestion-item {
+        padding: 0.25rem 0.5rem;
+      }
+      .char-counter {
+        font-size: 0.65rem;
+      }
+      textarea {
+        min-height: 120px;
+        max-height: 35vh;
+      }
+    }
+    
+    /* Dark mode adjustments */
+    [data-bs-theme="dark"] .container {
+      background: rgba(33, 37, 41, 0.95);
+    }
+    
+    [data-bs-theme="dark"] .suggestions {
+      background: #343a40;
+      border-color: #495057;
+    }
+    
+    [data-bs-theme="dark"] .suggestion-item {
+      border-bottom-color: #495057;
+    }
+    
+    [data-bs-theme="dark"] .suggestion-item:hover {
+      background-color: #495057;
     }
   </style>
 </head>
@@ -42,7 +350,8 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1 class="text-center flex-grow-1">🧩 Engineering Prompt Generator</h1>
       <button class="theme-toggle" onclick="toggleTheme()">
-        <span id="themeLabel">Dark</span> Theme <span class="theme-toggle-icon">🌗</span>
+        <span id="themeLabel">Dark</span>
+        <span class="theme-toggle-icon"></span>
       </button>
     </div>
 
@@ -53,23 +362,36 @@
 
     <div class="mb-3">
       <label for="topicInput" class="form-label">Enter Topic Name</label>
-      <input type="text" class="form-control" id="topicInput" placeholder="e.g., JavaScript Closures">
+      <div class="input-group">
+        <input type="text" class="form-control" id="topicInput" placeholder="e.g., JavaScript Closures, React Hooks, Docker Containers">
+        <div class="suggestions" id="suggestions">
+          <div class="suggestion-item" onclick="selectSuggestion('JavaScript Closures')">JavaScript Closures</div>
+          <div class="suggestion-item" onclick="selectSuggestion('React Hooks')">React Hooks</div>
+          <div class="suggestion-item" onclick="selectSuggestion('Docker Containers')">Docker Containers</div>
+          <div class="suggestion-item" onclick="selectSuggestion('REST API Design')">REST API Design</div>
+          <div class="suggestion-item" onclick="selectSuggestion('Database Indexing')">Database Indexing</div>
+          <div class="suggestion-item" onclick="selectSuggestion('Microservices Architecture')">Microservices Architecture</div>
+        </div>
+      </div>
     </div>
 
     <div class="mb-3">
-      <button class="btn btn-primary" onclick="generatePrompt()">Generate Prompt</button>
-      <button class="btn btn-success ms-2" onclick="copyPrompt()">Copy Prompt</button>
-      <button class="btn btn-secondary ms-2" onclick="resetFields()">Reset</button>
-    </div>
-
-    <div id="copyAlert" class="alert alert-success alert-dismissible fade d-none" role="alert">
-      <strong>✅ Prompt Copied!</strong> Prompt copied to clipboard.
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary" onclick="generatePrompt()" id="generateBtn">
+          <span class="btn-text">Generate Prompt</span>
+          <span class="btn-loading" style="display: none;">
+            <div class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>
+          </span>
+        </button>
+        <button class="btn btn-success" onclick="copyPrompt()" id="copyBtn">Copy Prompt</button>
+        <button class="btn btn-secondary" onclick="resetFields()">Reset</button>
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="generatedPrompt" class="form-label">Generated Prompt</label>
-      <textarea class="form-control" id="generatedPrompt" rows="4" style="min-height: 200px; max-height: 1000px; overflow-y: auto;" readonly></textarea>
+      <textarea class="form-control" id="generatedPrompt" placeholder="Your generated prompt will appear here..." readonly></textarea>
+      <div class="char-counter" id="charCounter">0 characters</div>
     </div>
   </div>
 
@@ -78,58 +400,182 @@
     window.addEventListener('DOMContentLoaded', () => {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       document.documentElement.setAttribute('data-bs-theme', prefersDark ? 'dark' : 'light');
-      document.getElementById('themeLabel').textContent = prefersDark ? 'Light' : 'Dark';
+      updateThemeButton(prefersDark ? 'dark' : 'light');
+      
+      // Initialize character counter
+      updateCharCounter();
+      
+      // Add input event listeners
+      document.getElementById('topicInput').addEventListener('input', handleInput);
+      document.getElementById('topicInput').addEventListener('focus', handleInput);
+      document.getElementById('generatedPrompt').addEventListener('input', updateCharCounter);
+      
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', (e) => {
+        const suggestions = document.getElementById('suggestions');
+        const topicInput = document.getElementById('topicInput');
+        
+        if (!suggestions.contains(e.target) && !topicInput.contains(e.target)) {
+          suggestions.style.display = 'none';
+        }
+      });
     });
+
+    function updateThemeButton(theme) {
+      const themeLabel = document.getElementById('themeLabel');
+      const themeIcon = document.querySelector('.theme-toggle-icon');
+      
+      if (theme === 'dark') {
+        themeLabel.textContent = 'Light';
+        themeIcon.textContent = '☀️';
+      } else {
+        themeLabel.textContent = 'Dark';
+        themeIcon.textContent = '🌙';
+      }
+    }
 
     function toggleTheme() {
       const html = document.documentElement;
-      const themeLabel = document.getElementById('themeLabel');
       const isDark = html.getAttribute('data-bs-theme') === 'dark';
-      html.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
-      themeLabel.textContent = isDark ? 'Dark' : 'Light';
+      const newTheme = isDark ? 'light' : 'dark';
+      
+      html.setAttribute('data-bs-theme', newTheme);
+      updateThemeButton(newTheme);
     }
 
-    function generatePrompt() {
-      const topic = document.getElementById('topicInput').value.trim();
-      if (!topic) return alert("Please enter a topic name.");
-      const finalPrompt = template.replaceAll("{{TOPIC}}", topic);
-      const outputBox = document.getElementById('generatedPrompt');
-      outputBox.value = finalPrompt;
-      outputBox.style.height = "auto";
-      outputBox.style.height = outputBox.scrollHeight + "px";
-    }
-
-    function copyPrompt() {
-      const text = document.getElementById('generatedPrompt').value;
-      const tempTextarea = document.createElement('textarea');
-      tempTextarea.value = text;
-      document.body.appendChild(tempTextarea);
-      tempTextarea.select();
-      try {
-        document.execCommand('copy');
-        showCopyAlert();
-      } catch (err) {
-        alert("❌ Copy failed. Please copy manually.");
+    function handleInput() {
+      const input = document.getElementById('topicInput');
+      const suggestions = document.getElementById('suggestions');
+      const inputValue = input.value.trim();
+      
+      // Only show suggestions if user is typing but hasn't entered a complete topic
+      if (inputValue.length > 0 && inputValue.length < 3) {
+        suggestions.style.display = 'block';
+      } else {
+        suggestions.style.display = 'none';
       }
-      document.body.removeChild(tempTextarea);
     }
 
-    function showCopyAlert() {
-      const alertBox = document.getElementById('copyAlert');
-      alertBox.classList.remove('d-none');
-      alertBox.classList.add('show');
-      setTimeout(() => {
-        alertBox.classList.remove('show');
-        alertBox.classList.add('d-none');
-      }, 3000);
+    function selectSuggestion(topic) {
+      document.getElementById('topicInput').value = topic;
+      document.getElementById('suggestions').style.display = 'none';
+    }
+
+    function updateCharCounter() {
+      const textarea = document.getElementById('generatedPrompt');
+      const counter = document.getElementById('charCounter');
+      const charCount = textarea.value.length;
+      const wordCount = textarea.value.trim() ? textarea.value.trim().split(/\s+/).length : 0;
+      
+      counter.textContent = `${charCount} characters, ${wordCount} words`;
+    }
+
+    async function generatePrompt() {
+      const topic = document.getElementById('topicInput').value.trim();
+      if (!topic) {
+        // Simple validation without alert
+        const input = document.getElementById('topicInput');
+        input.focus();
+        input.style.borderColor = '#dc3545';
+        setTimeout(() => {
+          input.style.borderColor = '#e9ecef';
+        }, 2000);
+        return;
+      }
+      
+      // Show loading state
+      const generateBtn = document.getElementById('generateBtn');
+      const btnText = generateBtn.querySelector('.btn-text');
+      const btnLoading = generateBtn.querySelector('.btn-loading');
+      
+      generateBtn.disabled = true;
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'inline-block';
+      
+      try {
+        // Simulate processing time for better UX
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        const finalPrompt = template.replaceAll("{{TOPIC}}", topic);
+        const outputBox = document.getElementById('generatedPrompt');
+        outputBox.value = finalPrompt;
+        outputBox.style.height = "auto";
+        outputBox.style.height = outputBox.scrollHeight + "px";
+        
+        updateCharCounter();
+        
+        // Enable copy button
+        document.getElementById('copyBtn').disabled = false;
+        
+      } catch (error) {
+        // Simple error handling without alert
+        console.error('Error generating prompt:', error);
+      } finally {
+        // Reset loading state
+        generateBtn.disabled = false;
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
+      }
+    }
+
+    async function copyPrompt() {
+      const text = document.getElementById('generatedPrompt').value;
+      if (!text.trim()) {
+        // Simple validation without alert
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.style.borderColor = '#dc3545';
+        setTimeout(() => {
+          copyBtn.style.borderColor = '';
+        }, 2000);
+        return;
+      }
+      
+      try {
+        // Use modern clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          // Fallback for older browsers
+          const tempTextarea = document.createElement('textarea');
+          tempTextarea.value = text;
+          tempTextarea.style.position = 'fixed';
+          tempTextarea.style.opacity = '0';
+          document.body.appendChild(tempTextarea);
+          tempTextarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempTextarea);
+        }
+        
+        // Visual feedback on copy button
+        const copyBtn = document.getElementById('copyBtn');
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('btn-outline-success');
+        copyBtn.classList.remove('btn-success');
+        
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+          copyBtn.classList.remove('btn-outline-success');
+          copyBtn.classList.add('btn-success');
+        }, 2000);
+        
+      } catch (err) {
+        // Simple error handling without alert
+        console.error('Copy failed:', err);
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.style.borderColor = '#dc3545';
+        setTimeout(() => {
+          copyBtn.style.borderColor = '';
+        }, 2000);
+      }
     }
 
     function resetFields() {
       document.getElementById('topicInput').value = "";
       document.getElementById('generatedPrompt').value = "";
-      const alertBox = document.getElementById('copyAlert');
-      alertBox.classList.remove('show');
-      alertBox.classList.add('d-none');
+      document.getElementById('suggestions').style.display = 'none';
+      document.getElementById('copyBtn').disabled = true;
+      updateCharCounter();
     }
 
     const template = `Act as a world-class education and implementation specialist specializing in engineering topics. Given the following context, criteria, and instructions, provide a comprehensive, structured, and professional guide that covers everything from fundamentals to expert-level practices for mastering the topic of:  🧩 **"""{{TOPIC}}"""**
@@ -167,8 +613,8 @@ Utilize a step-by-step, structured educational method that explores "{{TOPIC}}" 
   * Internal working (under-the-hood behavior)
 
 ### 4. ⚠️ **Problems & Pitfalls**
-* What’s allowed? ✅  
-* What’s disallowed ❌
+* What's allowed? ✅  
+* What's disallowed ❌
 * Misconceptions that developers often have.
 * Mistakes seen in production/interviews.
 
@@ -189,7 +635,7 @@ Utilize a step-by-step, structured educational method that explores "{{TOPIC}}" 
 * Realistic problems to apply theory.
 
 ### 8. ✅ **Best Practices & Recommendations**
-* Bullet points of dos and don’ts.
+* Bullet points of dos and don'ts.
 * Naming, placement, and structure tips.
 * Memory, performance, or readability considerations.
 
