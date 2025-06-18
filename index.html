@@ -1,73 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Engineering Prompt Generator</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        padding-top: 3rem;
-      }
-      textarea {
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1 class="mb-4 text-center">🧩 Engineering Prompt Generator</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Prompt Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding-top: 3rem;
+    }
+    textarea {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-3 text-center">🧩 Engineering Prompt Generator</h1>
+    <p class="text-center mb-4">
+      Enter any engineering topic below and instantly generate a structured, professional prompt tailored for mastering that subject. 
+      This tool is ideal for interview preparation, academic deep dives, or real-world project onboarding. Once generated, you can easily copy the prompt and begin learning with clarity and direction.
+    </p>
 
-      <div class="mb-3">
-        <label for="topicInput" class="form-label">Enter Topic Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="topicInput"
-          placeholder="e.g., JavaScript Closures"
-        />
-      </div>
-
-      <div class="mb-3">
-        <button class="btn btn-primary" onclick="generatePrompt()">
-          Generate Prompt
-        </button>
-        <button class="btn btn-success ms-2" onclick="copyPrompt()">
-          Copy Prompt
-        </button>
-      </div>
-
-      <div
-        id="copyAlert"
-        class="alert alert-success alert-dismissible fade show d-none"
-        role="alert"
-      >
-        <strong>✅ Prompt Copied!</strong> Prompt copied to clipboard.
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
-      </div>
-
-      <div class="mb-3">
-        <label for="generatedPrompt" class="form-label">Generated Prompt</label>
-        <textarea
-          class="form-control"
-          id="generatedPrompt"
-          rows="30"
-          readonly
-        ></textarea>
-      </div>
+    <div class="mb-3">
+      <label for="topicInput" class="form-label">Enter Topic Name</label>
+      <input type="text" class="form-control" id="topicInput" placeholder="e.g., JavaScript Closures">
     </div>
 
-    <script>
-      const template = `Act as a world-class education and implementation specialist specializing in engineering topics. Given the following context, criteria, and instructions, provide a comprehensive, structured, and professional guide that covers everything from fundamentals to expert-level practices for mastering the topic of:  🧩 **\`\`\`{{TOPIC}}\`\`\`**
+    <div class="mb-3">
+      <button class="btn btn-primary" onclick="generatePrompt()">Generate Prompt</button>
+      <button class="btn btn-success ms-2" onclick="copyPrompt()">Copy Prompt</button>
+      <button class="btn btn-secondary ms-2" onclick="resetFields()">Reset</button>
+    </div>
+
+    <div id="copyAlert" class="alert alert-success alert-dismissible fade d-none" role="alert">
+      <strong>✅ Prompt Copied!</strong> Prompt copied to clipboard.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="mb-3">
+      <label for="generatedPrompt" class="form-label">Generated Prompt</label>
+      <textarea class="form-control" id="generatedPrompt" rows="30" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    const template = `Act as a world-class education and implementation specialist specializing in engineering topics. Given the following context, criteria, and instructions, provide a comprehensive, structured, and professional guide that covers everything from fundamentals to expert-level practices for mastering the topic of:  🧩 **\`\`\`{{TOPIC}}\`\`\`**
 
 ## Context
 The goal is to learn and master \`{{TOPIC}}\` in a way that:
@@ -138,44 +117,45 @@ Utilize a step-by-step, structured educational method that explores \`{{TOPIC}}\
 * Ensure the content is scalable and suitable for both **interview prep** and **project application**.
 * When relevant, provide **PDF-friendly formatting** or create **quiz card versions** for study aid.`;
 
-      function generatePrompt() {
-        const topic = document.getElementById("topicInput").value.trim();
-        if (!topic) return alert("Please enter a topic name.");
-        const finalPrompt = template.replaceAll("{{TOPIC}}", topic);
-        document.getElementById("generatedPrompt").value = finalPrompt;
+    function generatePrompt() {
+      const topic = document.getElementById('topicInput').value.trim();
+      if (!topic) return alert("Please enter a topic name.");
+      const finalPrompt = template.replaceAll("{{TOPIC}}", topic);
+      document.getElementById('generatedPrompt').value = finalPrompt;
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('generatedPrompt').value;
+      const tempTextarea = document.createElement('textarea');
+      tempTextarea.value = text;
+      document.body.appendChild(tempTextarea);
+      tempTextarea.select();
+      try {
+        document.execCommand('copy');
+        showCopyAlert();
+      } catch (err) {
+        alert("❌ Copy failed. Please copy manually.");
       }
+      document.body.removeChild(tempTextarea);
+    }
 
-      function copyPrompt() {
-        const text = document.getElementById("generatedPrompt").value;
-        const tempTextarea = document.createElement("textarea");
-        tempTextarea.value = text;
-        document.body.appendChild(tempTextarea);
-        tempTextarea.select();
+    function showCopyAlert() {
+      const alertBox = document.getElementById('copyAlert');
+      alertBox.classList.remove('d-none');
+      alertBox.classList.add('show');
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+        alertBox.classList.add('d-none');
+      }, 3000);
+    }
 
-        try {
-          document.execCommand("copy");
-          showCopyAlert();
-        } catch (err) {
-          alert("❌ Copy failed. Please copy manually.");
-        }
-
-        document.body.removeChild(tempTextarea);
-      }
-
-      function showCopyAlert() {
-  const alertBox = document.getElementById('copyAlert');
-  
-  // Show the alert
-  alertBox.classList.remove('d-none');
-  alertBox.classList.add('show');
-
-  // Wait 3 seconds, then hide it
-  setTimeout(() => {
-    alertBox.classList.remove('show');
-    alertBox.classList.add('d-none');
-  }, 3000);
-}
-
-    </script>
-  </body>
+    function resetFields() {
+      document.getElementById('topicInput').value = "";
+      document.getElementById('generatedPrompt').value = "";
+      const alertBox = document.getElementById('copyAlert');
+      alertBox.classList.remove('show');
+      alertBox.classList.add('d-none');
+    }
+  </script>
+</body>
 </html>
