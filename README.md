@@ -28,7 +28,8 @@ Welcome to the **Engineering Prompt Generator** — your ⚡ultimate tool⚡ for
 
 | 🌞 Light Mode | 🌙 Dark Mode |
 |--------------|-------------|
-| ![Light](https://via.placeholder.com/600x400.png?text=Light+Theme) | ![Dark](https://via.placeholder.com/600x400.png?text=Dark+Theme) |
+| ![Light](https://via.placeholder.com/600x400.png?text=Light+Theme) | ![Dark](![image](https://github.com/user-attachments/assets/fda1d392-75cb-4cd5-b572-f5c1f8c7aa0e)
+) |
 
 ---
 
