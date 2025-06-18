@@ -187,14 +187,14 @@ The tool is optimized for all screen sizes:
 <div align="center">
 
 ### 🌞 Light Mode
-![Light Mode][Screenshot:](https://github.com/user-attachments/assets/930c469b-ab6f-45b7-96e6-29fa9ffdb51c)
+[](https://github.com/user-attachments/assets/930c469b-ab6f-45b7-96e6-29fa9ffdb51c)
 
 
 ### 🌙 Dark Mode  
-![Dark Mode][Screenshot:](https://github.com/user-attachments/assets/4b0d0df5-9fc9-4ae3-992d-afb0bd86912d)
+[](https://github.com/user-attachments/assets/4b0d0df5-9fc9-4ae3-992d-afb0bd86912d)
 
 ### 📱 Mobile View
-![Mobile View]![Screenshot:](https://github.com/user-attachments/assets/8ac7fa58-b4d6-463f-afad-e0af063a755b)
+[](https://github.com/user-attachments/assets/8ac7fa58-b4d6-463f-afad-e0af063a755b)
 
 
 </div>
