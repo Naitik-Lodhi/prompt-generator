@@ -27,9 +27,9 @@ Welcome to the **Engineering Prompt Generator** — your ⚡ultimate tool⚡ for
 > 📸 Replace with your actual UI screenshots once deployed.
 
 | 🌞 Light Mode |
-| ![Light]![image](https://github.com/user-attachments/assets/0520467b-632c-40e0-9c17-38c16e2013b5) | 
+| ![image](https://github.com/user-attachments/assets/0520467b-632c-40e0-9c17-38c16e2013b5) | 
 | 🌙 Dark Mode |
-| ![Dark](![image](https://github.com/user-attachments/assets/fda1d392-75cb-4cd5-b572-f5c1f8c7aa0e)) |
+| !![image](https://github.com/user-attachments/assets/fda1d392-75cb-4cd5-b572-f5c1f8c7aa0e) |
 
 ---
 
