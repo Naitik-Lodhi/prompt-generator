@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +12,42 @@
     textarea {
       white-space: pre-wrap;
       word-break: break-word;
+      transition: height 0.3s ease;
+    }
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(45deg, #6c757d, #343a40);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .theme-toggle:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #495057, #212529);
+    }
+    .theme-toggle-icon {
+      margin-left: 0.5rem;
+      font-size: 1.3rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="mb-3 text-center">🧩 Engineering Prompt Generator</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="text-center flex-grow-1">🧩 Engineering Prompt Generator</h1>
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <span id="themeLabel">Dark</span> Theme <span class="theme-toggle-icon">🌗</span>
+      </button>
+    </div>
+
     <p class="text-center mb-4">
-      Enter any engineering topic below and instantly generate a structured, professional prompt tailored for mastering that subject. 
+      Enter any engineering topic below and instantly generate a structured, professional prompt tailored for mastering that subject.
       This tool is ideal for interview preparation, academic deep dives, or real-world project onboarding. Once generated, you can easily copy the prompt and begin learning with clarity and direction.
     </p>
 
@@ -41,15 +69,73 @@
 
     <div class="mb-3">
       <label for="generatedPrompt" class="form-label">Generated Prompt</label>
-      <textarea class="form-control" id="generatedPrompt" rows="30" readonly></textarea>
+      <textarea class="form-control" id="generatedPrompt" rows="4" style="min-height: 200px; max-height: 1000px; overflow-y: auto;" readonly></textarea>
     </div>
   </div>
 
   <script>
-    const template = `Act as a world-class education and implementation specialist specializing in engineering topics. Given the following context, criteria, and instructions, provide a comprehensive, structured, and professional guide that covers everything from fundamentals to expert-level practices for mastering the topic of:  🧩 **\`\`\`{{TOPIC}}\`\`\`**
+    // Auto-detect system theme on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-bs-theme', prefersDark ? 'dark' : 'light');
+      document.getElementById('themeLabel').textContent = prefersDark ? 'Light' : 'Dark';
+    });
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeLabel = document.getElementById('themeLabel');
+      const isDark = html.getAttribute('data-bs-theme') === 'dark';
+      html.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+      themeLabel.textContent = isDark ? 'Dark' : 'Light';
+    }
+
+    function generatePrompt() {
+      const topic = document.getElementById('topicInput').value.trim();
+      if (!topic) return alert("Please enter a topic name.");
+      const finalPrompt = template.replaceAll("{{TOPIC}}", topic);
+      const outputBox = document.getElementById('generatedPrompt');
+      outputBox.value = finalPrompt;
+      outputBox.style.height = "auto";
+      outputBox.style.height = outputBox.scrollHeight + "px";
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('generatedPrompt').value;
+      const tempTextarea = document.createElement('textarea');
+      tempTextarea.value = text;
+      document.body.appendChild(tempTextarea);
+      tempTextarea.select();
+      try {
+        document.execCommand('copy');
+        showCopyAlert();
+      } catch (err) {
+        alert("❌ Copy failed. Please copy manually.");
+      }
+      document.body.removeChild(tempTextarea);
+    }
+
+    function showCopyAlert() {
+      const alertBox = document.getElementById('copyAlert');
+      alertBox.classList.remove('d-none');
+      alertBox.classList.add('show');
+      setTimeout(() => {
+        alertBox.classList.remove('show');
+        alertBox.classList.add('d-none');
+      }, 3000);
+    }
+
+    function resetFields() {
+      document.getElementById('topicInput').value = "";
+      document.getElementById('generatedPrompt').value = "";
+      const alertBox = document.getElementById('copyAlert');
+      alertBox.classList.remove('show');
+      alertBox.classList.add('d-none');
+    }
+
+    const template = `Act as a world-class education and implementation specialist specializing in engineering topics. Given the following context, criteria, and instructions, provide a comprehensive, structured, and professional guide that covers everything from fundamentals to expert-level practices for mastering the topic of:  🧩 **"""{{TOPIC}}"""**
 
 ## Context
-The goal is to learn and master \`{{TOPIC}}\` in a way that:
+The goal is to learn and master "{{TOPIC}}" in a way that:
 * Builds a **foundational understanding** clearly.
 * Highlights **critical distinctions**, common pitfalls, and misconceptions.
 * Includes **real-world use cases**, **edge cases**, and advanced considerations.
@@ -59,12 +145,12 @@ The goal is to learn and master \`{{TOPIC}}\` in a way that:
 * Aids in **retaining and applying** the concepts in interviews and projects.
 
 ## Approach
-Utilize a step-by-step, structured educational method that explores \`{{TOPIC}}\` from basic definitions to complex applications. Each section should focus on clarity and practical implications, incorporating real-world examples and detailed analysis to support understanding. Engage the learner with interactive exercises throughout to reinforce key concepts and facilitate retention.
+Utilize a step-by-step, structured educational method that explores "{{TOPIC}}" from basic definitions to complex applications. Each section should focus on clarity and practical implications, incorporating real-world examples and detailed analysis to support understanding. Engage the learner with interactive exercises throughout to reinforce key concepts and facilitate retention.
 
 ## Response Format
 
 ### 1. 🚀 **Introduction**
-* Briefly explain the **importance and relevance** of \`{{TOPIC}}\` in real-world development or architecture.
+* Briefly explain the **importance and relevance** of "{{TOPIC}}" in real-world development or architecture.
 
 ### 2. 🧠 **Core Concepts**
 * Define all key terms and foundational principles.
@@ -116,46 +202,6 @@ Utilize a step-by-step, structured educational method that explores \`{{TOPIC}}\
 * Include relevant **code snippets**, **tables**, and **callouts** where needed.
 * Ensure the content is scalable and suitable for both **interview prep** and **project application**.
 * When relevant, provide **PDF-friendly formatting** or create **quiz card versions** for study aid.`;
-
-    function generatePrompt() {
-      const topic = document.getElementById('topicInput').value.trim();
-      if (!topic) return alert("Please enter a topic name.");
-      const finalPrompt = template.replaceAll("{{TOPIC}}", topic);
-      document.getElementById('generatedPrompt').value = finalPrompt;
-    }
-
-    function copyPrompt() {
-      const text = document.getElementById('generatedPrompt').value;
-      const tempTextarea = document.createElement('textarea');
-      tempTextarea.value = text;
-      document.body.appendChild(tempTextarea);
-      tempTextarea.select();
-      try {
-        document.execCommand('copy');
-        showCopyAlert();
-      } catch (err) {
-        alert("❌ Copy failed. Please copy manually.");
-      }
-      document.body.removeChild(tempTextarea);
-    }
-
-    function showCopyAlert() {
-      const alertBox = document.getElementById('copyAlert');
-      alertBox.classList.remove('d-none');
-      alertBox.classList.add('show');
-      setTimeout(() => {
-        alertBox.classList.remove('show');
-        alertBox.classList.add('d-none');
-      }, 3000);
-    }
-
-    function resetFields() {
-      document.getElementById('topicInput').value = "";
-      document.getElementById('generatedPrompt').value = "";
-      const alertBox = document.getElementById('copyAlert');
-      alertBox.classList.remove('show');
-      alertBox.classList.add('d-none');
-    }
   </script>
 </body>
 </html>
